@@ -1,4 +1,4 @@
-import './App.scss';
+import './styles/App.scss';
 import Speed from './components/Speed.js'
 
 function App() {
