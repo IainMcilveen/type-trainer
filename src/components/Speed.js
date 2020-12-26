@@ -16,6 +16,11 @@ function Speed(props){
     //the user reads from
     function updateText(text){
         setText(text);
+
+        if(error != -1){
+            
+        }
+
         if(text.substring(text.length-1,text.length) !== props.paragraph.charAt(char)){
             console.log(text.substring(text.length-1,text.length), props.paragraph.charAt(char))
             setError(char);
@@ -35,7 +40,7 @@ function Speed(props){
             html = html.substring(0,error) + '<red>' + html.substring(0,error+1) + '</red>' + html.substring(error+1,html.length);
         }
 
-        return parse(html)
+        return html
     }
 
     //finds the character location of the next space in the paragraph
