@@ -1,4 +1,5 @@
 import React, {useState} from "react"
+const parse = require('html-react-parser');
 
 function Speed(props){
 
@@ -7,7 +8,7 @@ function Speed(props){
     let [para, setPara] = useState(props.paragraph);
     
     //hooks for calculations 
-    let [errors, setErrors] = useState(0);
+    let [error, setError] = useState(-1);
     let [words, setWords] = useState(0);
     let [char, setChar] = useState(0);
 
@@ -15,13 +16,26 @@ function Speed(props){
     //the user reads from
     function updateText(text){
         setText(text);
-        setChar(char + 1);
+        if(text.substring(text.length-1,text.length) !== props.paragraph.charAt(char)){
+            console.log(text.substring(text.length-1,text.length), props.paragraph.charAt(char))
+            setError(char);
+        }else{
+            setError(-1);
+            setChar(char + 1);
+        }
         setPara(paraStyling(props.paragraph));
-        console.log(paraStyling(props.paragraph));
     }
 
-    function paraStyling(text){
-        return React.createElement('i',{},(props.paragraph).substring(char,findNext(text,char))) + (props.paragraph).substring(findNext(text,char),props.paragraph.length);
+    //add all of the styling to the paragraph 
+    function paraStyling(text,error){
+        //underline the word which is currently being typed
+        let html = '<p>'+(text).substring(0,char)+'<u>'+(text).substring(char,findNext(text,char))+'</u>'+(text).substring(findNext(text,char),text.length)+'</p>'
+        //highlight in red the incorrect character
+        if(error !== -1){
+            html = html.substring(0,error) + '<red>' + html.substring(0,error+1) + '</red>' + html.substring(error+1,html.length);
+        }
+
+        return parse(html)
     }
 
     //finds the character location of the next space in the paragraph
@@ -38,7 +52,7 @@ function Speed(props){
     return(
         <div className="Speed-main">
             <h1>Speed</h1>
-            <p className="test-text">{para}</p>
+            <div className="Speed-para">{para}</div><br/>
             <input type="text" onChange={e => updateText(e.target.value)} />
         </div>
     );
