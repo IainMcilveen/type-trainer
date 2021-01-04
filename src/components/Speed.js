@@ -43,14 +43,22 @@ function Speed(props){
             <div className="Speed-para">{para}</div><br/>
             <input type="text" onChange={(event) => {
                 let temp = event.target.value;
-                if(temp.charAt(temp.length-1) !== props.paragraph.charAt(charAmt+1)){
-                    setCorrect(false);
-                }else{
+                /*
+                if(temp.charAt(temp.length-1) !== props.paragraph.charAt(charAmt) || (totText.length+1) !== (props.paragraph).substring(0,charAmt+1).length){
+                    setCorrect(false);*/
+                //check to see if the text is correct
+                if(temp.charAt(temp.length-1) !== props.paragraph.charAt(charAmt)){ 
+                    setCorrect(false); //if not set the hook to false
+                }else{ //otherwise set the hook to true and update all of the text boxes
                     setCorrect(true);
                     setCharAmt(charAmt+1);
+                    setTotText(totText + temp.charAt(temp.length-1));
+                    if(temp.charAt(temp.length-1) === " "){
+                        event.target.value = "";
+                    }
                 }
                 setCurText(temp)
-                setTotText(totText + temp.charAt(temp.length-1))}} />
+                }} />
         </div>
     );
 }
