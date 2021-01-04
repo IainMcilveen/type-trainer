@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import '../styles/Speed.scss'
 const parse = require('html-react-parser');
 
 function Speed(props){
@@ -11,6 +12,7 @@ function Speed(props){
     
     //hooks for calculations 
     let [charAmt, setCharAmt] = useState(0);
+    let [wordAmt, setWordAmt] = useState(0);
 
     //function used for updating the text box as well as the paragraph
     //the user reads from
@@ -23,9 +25,24 @@ function Speed(props){
         console.log("totText: "+totText);
         console.log("charAmt: "+charAmt);
         console.log("correct: "+correct);
+        console.log("wordAmt: "+wordAmt);
+
     }
 
-    /*
+    function doStyling(){
+        //final variable will contain the resulting html to be parsed
+        let final = props.paragraph;
+        
+        //underline
+        let underloc = findNext(props.paragraph,charAmt);
+        final = final.substring(0,charAmt) + '<u>' + final.substring(charAmt,underloc) + '</u>' + final.substring(underloc,final.length);
+
+        //highlight green 
+        final = '<green>' + final.substring(0,charAmt) + '</green>' + final.substring(charAmt,final.length);
+
+        setPara(parse(final));
+    }
+
     //finds the character location of the next space in the paragraph
     //if there are none left it returns the number of characters left in the paragraph 
     function findNext(text, start){
@@ -35,12 +52,14 @@ function Speed(props){
         }else{
             return text.length;
         }
-    }*/
+    }
 
     return(
         <div className="Speed-main">
             <h1>Speed</h1>
-            <div className="Speed-para">{para}</div><br/>
+            <div className="Speed-para">
+                <p>{para}</p>
+            </div>
             <input type="text" onChange={(event) => {
                 let temp = event.target.value;
                 /*
@@ -54,10 +73,12 @@ function Speed(props){
                     setCharAmt(charAmt+1);
                     setTotText(totText + temp.charAt(temp.length-1));
                     if(temp.charAt(temp.length-1) === " "){
+                        setWordAmt(wordAmt + 1)
                         event.target.value = "";
                     }
                 }
                 setCurText(temp)
+                doStyling();
                 }} />
         </div>
     );
